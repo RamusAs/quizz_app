@@ -1,5 +1,5 @@
 import { Box, Flex, Text } from "@chakra-ui/react"
-import { FaPuzzlePiece, FaDice, FaMedal } from "react-icons/fa"
+import { FaDice, FaMedal } from "react-icons/fa"
 import { HiOutlinePuzzlePiece } from "react-icons/hi2"
 import { useNavigate, useLocation } from "react-router-dom"
 
