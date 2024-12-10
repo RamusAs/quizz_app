@@ -6,6 +6,20 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 const queryClient = new QueryClient();
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then((registration) => {
+        console.log("Service Worker enregistré :", registration);
+      })
+      .catch((error) => {
+        console.error("Service Worker non enregistré :", error);
+      });
+  });
+}
+
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ChakraProvider value={defaultSystem} >
