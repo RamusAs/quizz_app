@@ -6,19 +6,15 @@ import {
   ProgressCircleRoot,
   ProgressCircleValueText,
 } from "../components/ui/progress-circle"
-import { Box, Flex, Image, Text } from "@chakra-ui/react"
-import { BottomNavigation, CategorieImage } from "../components"
+import { Box, Flex,  Text } from "@chakra-ui/react"
+import {  CategorieImage } from "../components"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 
-type CategoryProgress = {
-  name: string
-  completed: number
-  total: number
-}
+
 
 export const CategoriesPage = () => {
-  const { data: categories, isLoading, error } = useQuery<Category[]>({
+  const { data: categories } = useQuery<Category[]>({
     queryKey: ["trivia_categories"],
     queryFn: () => fetchCategories(),
   })
