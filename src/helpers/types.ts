@@ -5,6 +5,7 @@ export interface userAnswers {
 }
 
 export interface Question {
+  id: any
   category: string
   type: string
   difficulty: string
@@ -20,4 +21,10 @@ export interface Category {
 
 export type UserProgress = {
   [category: string]: { total: number; completed: number; correct: number }
+}
+
+export interface UserData {
+  name: string | undefined
+  email: string
+  password: string
 }

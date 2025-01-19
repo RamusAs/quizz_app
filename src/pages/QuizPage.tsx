@@ -1,46 +1,59 @@
 import React, { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { Text } from "@chakra-ui/react"
-import { fetchQuestions } from "../api/api"
-import { getUserProgress, Question, userAnswers } from "../helpers"
+import { Category, Question, userAnswers } from "../helpers"
 import { Questions, Summary } from "../components"
 import { useParams } from "react-router-dom"
-
-const NB_Q = 20
+import {
+  getCategory,
+  getCategoryQuestions,
+  getUserProgress,
+} from "../services/firestoreService"
 
 export const QuizPage: React.FC = () => {
-  const { category } = useParams<{ category: string }>()
-  const progress = getUserProgress()
-  const progressIndex =
-    category && progress?.[category]?.completed
-      ? progress?.[category]?.completed
-      : 0
+  const { category: id } = useParams<{ category: string }>()
+  const { data: category, isLoading: catLoading } = useQuery<Category>({
+    queryKey: ["category"],
+    queryFn: () => getCategory(parseInt(id ?? "")),
+  })
 
-  const { data: questions, isLoading, error } = useQuery<Question[]>({
-    queryKey: ["questions", NB_Q],
-    queryFn: () => fetchQuestions(NB_Q, category),
+  const { data: progress, isLoading: progressLoading } = useQuery<{}[]>({
+    queryKey: ["user"],
+    queryFn: () => getUserProgress(),
+  })
+  const progressIndex = 0
+  category && progress?.[category.uid]?.answeredCount
+    ? progress?.[category.uid]?.answeredCount
+    : 0
+
+  const { data: questions, isLoading: questionLoading, error } = useQuery<
+    Question[]
+  >({
+    queryKey: ["questions"],
+    queryFn: () => getCategoryQuestions(parseInt(id ?? "")),
   })
 
   const [currentIndex, setCurrentIndex] = useState<number>(progressIndex)
   const [userAnswers, setUserAnswers] = useState<userAnswers[]>([])
 
+  const isLoading = questionLoading || catLoading || progressLoading
+
   if (isLoading) return <Text>Chargement des questions...</Text>
   if (error instanceof Error) return <Text>Erreur : {error.message}</Text>
 
   const isGameEnd =
-    (progress?.[category as string]?.completed ?? 0) !==
-    (progress?.[category as string]?.total ?? 20)
+    (progress?.[category.uid]?.answeredCount ?? 0) !== category.question_counts
 
   return (
     <>
       {isGameEnd && (
         <Questions
-          questions={questions}
+          questions={questions as Question[]}
           currentIndex={currentIndex}
           setCurrentIndex={setCurrentIndex}
           setUserAnswers={setUserAnswers}
-          category={category}
-          amount={NB_Q}
+          category={category.uid}
+          progress={progress?.[category.uid]}
         />
       )}
       {!isGameEnd && <Summary userAnswers={userAnswers} />}

@@ -1,6 +1,6 @@
 {
   "name": "Quiz Master",
-  "short_name": "QuizApp",
+  "short_name": "Quizzer",
   "description": "Testez vos connaissances avec des quiz amusants !",
   "start_url": "/",
   "display": "standalone",

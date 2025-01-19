@@ -1,3 +1,5 @@
+export * from "./AccountPage"
+export * from "./AuthPage"
 export * from "./CategoriesPage"
 export * from "./QuizPage"
 export * from "./HomePage"

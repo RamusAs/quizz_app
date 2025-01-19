@@ -1,6 +1,5 @@
 import { Box, Flex, Text } from "@chakra-ui/react"
 import { FaDice, FaMedal } from "react-icons/fa"
-import { HiOutlinePuzzlePiece } from "react-icons/hi2"
 import { useNavigate, useLocation } from "react-router-dom"
 
 export const BottomNavigation = () => {
@@ -9,19 +8,19 @@ export const BottomNavigation = () => {
 
   const menuItems = [
     {
-      label: "Home",
-      icon: HiOutlinePuzzlePiece,
+      label: "Games",
+      icon: FaDice,
       path: "/categories",
     },
     {
-      label: "Games",
+      label: "Params",
       icon: FaDice,
-      path: "/games",
+      path: "/parameters",
     },
     {
-      label: "Rewards",
+      label: "Account",
       icon: FaMedal,
-      path: "/rewards",
+      path: "/account",
     },
   ]
 

@@ -56,3 +56,6 @@ export const getCatColor = (cat: string) => {
       return "red.500"
   }
 }
+
+export const sortByKey = (arr: any[], key: string) =>
+  arr?.sort((a, b) => a[key].localeCompare(b[key])) ?? []

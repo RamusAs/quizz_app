@@ -8,12 +8,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 
-import {
-  decodeHtml,
-  Question,
-  updateUserProgress,
-  userAnswers,
-} from "../helpers"
+import { decodeHtml, Question, userAnswers } from "../helpers"
 import { useMemo, useState } from "react"
 import {
   ProgressBar,
@@ -23,6 +18,7 @@ import {
 } from "./ui/progress"
 import { HiOutlineArrowLongRight, HiOutlinePuzzlePiece } from "react-icons/hi2"
 import { useNavigate } from "react-router-dom"
+import { updateUserProgress } from "../services/firestoreService"
 
 interface QuestionsProps {
   questions: Question[] | undefined
@@ -30,21 +26,22 @@ interface QuestionsProps {
   setUserAnswers: Function
   setCurrentIndex: Function
   category: string | undefined
-  amount: number
+  progress: object | undefined
 }
 
 export const Questions = ({
   questions,
-  currentIndex,
   setUserAnswers,
   setCurrentIndex,
   category,
-  amount,
+  progress,
 }: QuestionsProps) => {
   const navigate = useNavigate()
+  const amount = questions?.length ?? 0
   const [showAnswer, setShowAnswer] = useState<boolean>(false)
   const [currentAnswer, setCurrentAnswer] = useState<string>("")
-
+  
+  const currentIndex = useMemo(() => progress?.answeredCount ?? 0, [progress])
   const currentQuestion = questions?.[currentIndex]
 
   const multiplesQuestions = useMemo<string[]>(
@@ -71,12 +68,27 @@ export const Questions = ({
   }
 
   const handleNextQuestion = () => {
+    if (!currentQuestion) return
+
+    const isCorrect = currentAnswer === currentQuestion.correct_answer
     setCurrentAnswer("")
     setShowAnswer(false)
     if (currentIndex < questions!.length) {
       setCurrentIndex((prev: number) => prev + 1)
     }
-    updateUserProgress(`${category}`, currentIndex + 1, amount, currentAnswer === currentQuestion?.correct_answer )
+    updateUserProgress(category ?? "", {
+      remainingQuestions: [
+        ...progress.remainingQuestions,
+        {
+          question: currentQuestion.question,
+          answer: currentQuestion.correct_answer,
+          userAnswer: currentAnswer,
+        },
+      ],
+      answeredCount: progress.answeredCount + 1,
+      correctCount: progress.correctCount + (isCorrect ? 1 : 0),
+      lastAnswered: new Date().toISOString(),
+    })
   }
 
   const getColor = (answer: string, defaultColor: string = "white") => {
