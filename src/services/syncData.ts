@@ -1,25 +1,13 @@
-import {
-  collection,
-  addDoc,
-  deleteDoc,
-  getDocs,
-  setDoc,
-  doc,
-} from "firebase/firestore"
-import axios from "axios"
+import { collection, addDoc, deleteDoc, getDocs } from "firebase/firestore"
+import axios, { AxiosError } from "axios"
 import { Category, Question } from "../helpers"
-
-type ApiResponse<T> = {
-  response_code: number
-  results: T
-}
 
 const BASE_URL = "https://opentdb.com"
 const API_URL = "https://opentdb.com/api.php"
 
 const THROTTLE_DELAY = 3000 // Délai entre les requêtes en ms
 
-export async function syncData(db) {
+export async function syncData(db: any) {
   try {
     console.log("Synchronisation des catégories...")
 
@@ -76,7 +64,7 @@ export async function syncData(db) {
       }))
 
       // Ajouter les questions à la collection "questions"
-      const addQuestionPromises = questions.map((question: Question) =>
+      const addQuestionPromises = questions.map((question) =>
         addDoc(questionsCollection, question)
       )
       await Promise.all(addQuestionPromises)
@@ -95,7 +83,7 @@ const fetchWithRetry = async (url: string, retries = 3, delay = 3000) => {
     try {
       return await axios.get(url) // Si la requête réussit, elle retourne ici
     } catch (error) {
-      if (error.response?.status === 429 && i < retries - 1) {
+      if (error instanceof AxiosError && error.response?.status === 429 && i < retries - 1) {
         console.warn(`Retrying request... Attempt ${i + 1}`)
         await new Promise((resolve) => setTimeout(resolve, delay))
       } else {
@@ -106,7 +94,7 @@ const fetchWithRetry = async (url: string, retries = 3, delay = 3000) => {
 }
 
 const fetchQuestions = async (
-  categoryId: number,
+  categoryId: number | undefined,
   token: string
 ): Promise<Question[]> => {
   let allQuestions: Question[] = []
@@ -117,12 +105,12 @@ const fetchQuestions = async (
       `${API_URL}?amount=50&category=${categoryId}&token=${token}`
     )
 
-    if (response.data.response_code === 4) {
+    if (response?.data.response_code === 4) {
       // Toutes les questions ont été récupérées pour cette catégorie
       hasMoreQuestions = false
-    } else if (response.data.response_code !== 0) {
+    } else if (response?.data.response_code !== 0) {
       throw new Error(
-        `Erreur API (code ${response.data.response_code}): Impossible de récupérer les questions`
+        `Erreur API (code ${response?.data.response_code}): Impossible de récupérer les questions`
       )
     } else {
       // Ajouter les questions récupérées

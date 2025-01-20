@@ -23,9 +23,9 @@ export const updateUserProgress = (
   progress[category] = {
     completed,
     total,
-    correct: correct
-      ? (progress[category]?.correct ?? 0) + 1
-      : progress[category]?.correct ?? 0,
+    correctCount: correct
+      ? (progress[category]?.correctCount ?? 0) + 1
+      : progress[category]?.correctCount ?? 0,
   }
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress))
 }
@@ -35,7 +35,7 @@ export const resetUserProgress = (category: string): void => {
   progress[category] = {
     completed: 0,
     total: 20,
-    correct: 0,
+    correctCount: 0,
   }
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress))
 }

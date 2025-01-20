@@ -3,18 +3,18 @@ import {
   AccountPage,
   AuthPage,
   CategoriesPage,
-  HomePage,
+  //HomePage,
   QuizPage,
   ResultsPage,
 } from "./pages"
 import { Layout } from "./pages/Layout"
-import { syncData } from "./services/syncData"
-import { db } from "./firebase"
+//import { syncData } from "./services/syncData"
+//import { db } from "./firebase"
 import ProtectedRoute from "./components/ProtectedRoute"
 import { AuthProvider } from "./providers/AuthProvider"
 
 const App = () => {
-  window.syncData = () => syncData(db)
+ // window.syncData = () => syncData(db)
   return (
     <AuthProvider>
       <Router>

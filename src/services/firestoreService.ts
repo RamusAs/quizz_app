@@ -3,7 +3,6 @@ import {
   getDocs,
   query,
   where,
-  addDoc,
   doc,
   updateDoc,
   getDoc,
@@ -11,7 +10,7 @@ import {
 } from "firebase/firestore"
 import { db } from "../firebase"
 
-import { UserData } from "../helpers"
+import { Category, Progress, UserData } from "../helpers"
 import { getAuth } from "firebase/auth"
 
 export async function createUser(userData: UserData) {
@@ -28,7 +27,7 @@ export async function createUser(userData: UserData) {
     const categoriesSnapshot = await getDocs(categoriesCollection)
 
     // Construire l'objet de progrès pour chaque catégorie
-    const progress = categoriesSnapshot.docs.reduce((acc, category) => {
+    const progress = categoriesSnapshot.docs.reduce<Record<string, Progress>>((acc, category) => {
       acc[category.id] = {
         answeredCount: 0,
         correctCount: 0,
@@ -61,7 +60,7 @@ export async function createUser(userData: UserData) {
   }
 }
 
-async function addCategory(id, name) {
+/* async function addCategory(id, name) {
   try {
     await db.collection("categories").add({
       id,
@@ -72,7 +71,7 @@ async function addCategory(id, name) {
     console.error("Error adding category: ", error)
   }
 }
-
+ */
 export async function getCategories() {
   try {
     const categoriesCollection = collection(db, "categories")
@@ -87,7 +86,7 @@ export async function getCategories() {
   }
 }
 
-async function updateCategory(docId, newData) {
+/* async function updateCategory(docId, newData) {
   try {
     await db.collection("categories").doc(docId).update(newData)
     console.log("Category updated successfully!")
@@ -103,7 +102,7 @@ async function deleteCategory(docId) {
   } catch (error) {
     console.error("Error deleting category: ", error)
   }
-}
+} */
 
 export async function getQuestions() {
   try {
@@ -142,7 +141,9 @@ export async function getCategoryQuestions(categoryId: number) {
   }
 }
 
-export async function getCategory(categoryId: number) {
+export const getCategory = async (
+  categoryId: number
+): Promise<Category | undefined> => {
   try {
     // Crée une requête pour filtrer par `category_id`
     const questionsQuery = query(
@@ -150,16 +151,14 @@ export async function getCategory(categoryId: number) {
       where("id", "==", categoryId)
     )
 
-    // Exécute la requête
     const snapshot = await getDocs(questionsQuery)
 
-    // Mappe les résultats pour inclure l'ID du document
-    const categories = snapshot.docs.map((doc) => ({
+    const categories: Category[] = snapshot.docs.map((doc) => ({
       uid: doc.id,
       ...doc.data(),
     }))
 
-    return categories[0]
+    return categories[0] ?? null
   } catch (error) {
     console.error("Error fetching questions: ", error)
   }

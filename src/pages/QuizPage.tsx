@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { Text } from "@chakra-ui/react"
-import { Category, Question, userAnswers } from "../helpers"
+import { Question, userAnswers, UserProgress } from "../helpers"
 import { Questions, Summary } from "../components"
 import { useParams } from "react-router-dom"
 import {
@@ -12,28 +12,28 @@ import {
 
 export const QuizPage: React.FC = () => {
   const { category: id } = useParams<{ category: string }>()
-  const { data: category, isLoading: catLoading } = useQuery<Category>({
+  const { data: category, isLoading: catLoading } = useQuery<any>({
     queryKey: ["category"],
     queryFn: () => getCategory(parseInt(id ?? "")),
   })
 
-  const { data: progress, isLoading: progressLoading } = useQuery<{}[]>({
-    queryKey: ["user"],
-    queryFn: () => getUserProgress(),
-  })
-  const progressIndex = 0
-  category && progress?.[category.uid]?.answeredCount
-    ? progress?.[category.uid]?.answeredCount
-    : 0
+  const { data: progress, isLoading: progressLoading } = useQuery<UserProgress>(
+    {
+      queryKey: ["user"],
+      queryFn: () => getUserProgress(),
+    }
+  )
+  const progressIndex =
+    category && progress ? progress?.[category.uid]?.answeredCount : 0
 
   const { data: questions, isLoading: questionLoading, error } = useQuery<
-    Question[]
+    Question[] | any
   >({
     queryKey: ["questions"],
     queryFn: () => getCategoryQuestions(parseInt(id ?? "")),
   })
 
-  const [currentIndex, setCurrentIndex] = useState<number>(progressIndex)
+  const [currentIndex, setCurrentIndex] = useState<number>(progressIndex as number)
   const [userAnswers, setUserAnswers] = useState<userAnswers[]>([])
 
   const isLoading = questionLoading || catLoading || progressLoading
@@ -41,8 +41,7 @@ export const QuizPage: React.FC = () => {
   if (isLoading) return <Text>Chargement des questions...</Text>
   if (error instanceof Error) return <Text>Erreur : {error.message}</Text>
 
-  const isGameEnd =
-    (progress?.[category.uid]?.answeredCount ?? 0) !== category.question_counts
+  const isGameEnd = progressIndex !== category.question_counts
 
   return (
     <>

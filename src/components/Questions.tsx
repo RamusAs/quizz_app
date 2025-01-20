@@ -8,7 +8,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 
-import { decodeHtml, Question, userAnswers } from "../helpers"
+import { decodeHtml, Progress, Question, userAnswers } from "../helpers"
 import { useMemo, useState } from "react"
 import {
   ProgressBar,
@@ -26,7 +26,7 @@ interface QuestionsProps {
   setUserAnswers: Function
   setCurrentIndex: Function
   category: string | undefined
-  progress: object | undefined
+  progress: Progress | undefined
 }
 
 export const Questions = ({
@@ -40,7 +40,7 @@ export const Questions = ({
   const amount = questions?.length ?? 0
   const [showAnswer, setShowAnswer] = useState<boolean>(false)
   const [currentAnswer, setCurrentAnswer] = useState<string>("")
-  
+
   const currentIndex = useMemo(() => progress?.answeredCount ?? 0, [progress])
   const currentQuestion = questions?.[currentIndex]
 
@@ -78,15 +78,15 @@ export const Questions = ({
     }
     updateUserProgress(category ?? "", {
       remainingQuestions: [
-        ...progress.remainingQuestions,
+        ...(progress?.remainingQuestions ?? []),
         {
           question: currentQuestion.question,
           answer: currentQuestion.correct_answer,
           userAnswer: currentAnswer,
         },
       ],
-      answeredCount: progress.answeredCount + 1,
-      correctCount: progress.correctCount + (isCorrect ? 1 : 0),
+      answeredCount: (progress?.answeredCount ?? 0) + 1,
+      correctCount: (progress?.correctCount ?? 0) + (isCorrect ? 1 : 0),
       lastAnswered: new Date().toISOString(),
     })
   }

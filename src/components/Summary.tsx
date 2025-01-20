@@ -46,7 +46,7 @@ export const Summary = ({ userAnswers }: { userAnswers: userAnswers[] }) => {
         shadow="sm"
       >
         <Heading as="h3" size="lg" color="teal.700">
-          Score : {`${progress.correct} / ${progress.total}`}
+          Score : {`${progress.correctCount} / ${progress.total}`}
         </Heading>
         <Text mt={2} color="teal.500">
           Congrat' for your efforts, keep it up! 🎉

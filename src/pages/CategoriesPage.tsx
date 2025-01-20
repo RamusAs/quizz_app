@@ -1,5 +1,11 @@
 import { useQuery } from "@tanstack/react-query"
-import { Category, getCatColor, sortByKey, UserData } from "../helpers"
+import {
+  Category,
+  getCatColor,
+  sortByKey,
+  UserData,
+  UserProgress,
+} from "../helpers"
 import {
   ProgressCircleRing,
   ProgressCircleRoot,
@@ -15,14 +21,12 @@ import {
 } from "../services/firestoreService"
 
 export const CategoriesPage = () => {
-  const { data: categories } = useQuery<Category[]>({
+  const { data: categories } = useQuery<any>({
     queryKey: ["trivia_categories"],
     queryFn: () => getCategoriesWithQuestionCount(),
   })
 
-  const [userProgress, setUserProgress] = useState<
-    Record<string, { completed: number; total: number }>
-  >({})
+  const [userProgress, setUserProgress] = useState<UserProgress>({})
 
   const [user, setUser] = useState<UserData>()
 

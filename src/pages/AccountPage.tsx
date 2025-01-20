@@ -1,16 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import {
-  Flex,
-  Box,
-  Input,
-  Button,
-  Stack,
-  Heading,
-  Text,
-  useToast,
-} from "@chakra-ui/react"
+import { Flex, Box, Input,  Stack, Heading } from "@chakra-ui/react"
 import { FormControl, FormLabel } from "@chakra-ui/form-control"
 import { Toaster, toaster } from "../components/ui/toaster"
 import {
@@ -21,6 +12,7 @@ import {
   User,
 } from "firebase/auth"
 import { auth } from "../firebase"
+import { Button } from "../components/ui/button"
 
 export const AccountPage = () => {
   const [user, setUser] = useState<User | null>(auth.currentUser)
@@ -59,18 +51,16 @@ export const AccountPage = () => {
         setUser(auth.currentUser)
         toaster.create({
           title: "Profile updated successfully!",
-          status: "success",
+          type: "success",
           duration: 3000,
-          isClosable: true,
         })
       }
     } catch (error) {
       toaster.create({
         title: "Error updating profile",
-        description: error.message,
-        status: "error",
+        description: error instanceof Error && error.message,
+        type: "error",
         duration: 3000,
-        isClosable: true,
       })
     } finally {
       setIsLoading(false)
@@ -82,18 +72,16 @@ export const AccountPage = () => {
       await signOut(auth)
       toaster.create({
         title: "Logged out successfully!",
-        status: "success",
+        type: "success",
         duration: 3000,
-        isClosable: true,
       })
       setUser(null)
     } catch (error) {
       toaster.create({
         title: "Error logging out",
-        description: error.message,
-        status: "error",
+        description:error instanceof Error && error.message,
+        type: "error",
         duration: 3000,
-        isClosable: true,
       })
     }
   }
@@ -109,7 +97,7 @@ export const AccountPage = () => {
         boxShadow="lg"
         rounded="lg"
       >
-        <Stack spacing={4}>
+        <Stack m={4}>
           <Heading textAlign="center">Account Settings</Heading>
           <FormControl>
             <FormLabel>Pseudo</FormLabel>
@@ -140,10 +128,10 @@ export const AccountPage = () => {
               onChange={handleChange}
             />
           </FormControl>
-          <Stack spacing={6} pt={4}>
+          <Stack m={6} pt={4}>
             <Button
               bgColor="#6B46C1"
-              isLoading={isLoading}
+              loading={isLoading}
               onClick={handleUpdateProfile}
             >
               Update Profile

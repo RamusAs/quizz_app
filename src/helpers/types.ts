@@ -15,15 +15,25 @@ export interface Question {
 }
 
 export interface Category {
-  id: number
-  name: string
+  id?: number
+  uid: string
+  name?: string
+  question_counts?: number
 }
 
-export type UserProgress = {
-  [category: string]: { total: number; completed: number; correct: number }
+export type UserProgress = Record<string, Progress>
+
+export type Progress = {
+  answeredCount?: number
+  remainingQuestions?: any[]
+  correctCount?: number
+  completed?: number
+  lastAnswered?: string | null
+  total?: number
 }
 
 export interface UserData {
+  id?: string
   name: string | undefined
   email: string
   password: string

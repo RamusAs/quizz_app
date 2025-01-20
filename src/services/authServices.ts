@@ -24,7 +24,10 @@ export const registerUser = async ({ email, password, name }: UserData) => {
     console.log("Utilisateur inscrit :", userCredential.user)
     return userCredential.user
   } catch (error) {
-    console.error("Erreur d'inscription :", error.message)
+    console.error(
+      "Erreur d'inscription :",
+      error instanceof Error && error.message
+    )
     throw error
   }
 }
@@ -38,6 +41,9 @@ export const loginUser = async ({ email, password }: UserData) => {
     )
     console.log("Utilisateur connecté :", userCredential.user)
   } catch (error) {
-    console.error("Erreur de connexion :", error.message)
+    console.error(
+      "Erreur de connexion :",
+      error instanceof Error && error.message
+    )
   }
 }
