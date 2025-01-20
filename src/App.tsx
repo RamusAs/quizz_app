@@ -3,7 +3,7 @@ import {
   AccountPage,
   AuthPage,
   CategoriesPage,
-  //HomePage,
+  ParametersPage,
   QuizPage,
   ResultsPage,
 } from "./pages"
@@ -14,24 +14,23 @@ import ProtectedRoute from "./components/ProtectedRoute"
 import { AuthProvider } from "./providers/AuthProvider"
 
 const App = () => {
- // window.syncData = () => syncData(db)
+  // window.syncData = () => syncData(db)
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<CategoriesPage />} />
-
           <Route path="login" element={<AuthPage />} />
           <Route
-            path="/*"
+            path="/"
             element={
               <ProtectedRoute>
                 <Layout />
               </ProtectedRoute>
             }
           >
-            <Route path="categories" element={<CategoriesPage />} />
-            <Route path="categories/:category" element={<QuizPage />} />
+            <Route path="quiz" element={<CategoriesPage />} />
+            <Route path="quiz/:category" element={<QuizPage />} />
+            <Route path="parameters" element={<ParametersPage />} />
             <Route path="results" element={<ResultsPage />} />
             <Route path="account" element={<AccountPage />} />
           </Route>

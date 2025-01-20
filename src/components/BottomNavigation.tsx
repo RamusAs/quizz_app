@@ -1,5 +1,5 @@
 import { Box, Flex, Text } from "@chakra-ui/react"
-import { FaDice, FaMedal } from "react-icons/fa"
+import { FaDice, FaMedal, FaCogs } from "react-icons/fa"
 import { useNavigate, useLocation } from "react-router-dom"
 
 export const BottomNavigation = () => {
@@ -10,11 +10,11 @@ export const BottomNavigation = () => {
     {
       label: "Games",
       icon: FaDice,
-      path: "/categories",
+      path: "/quiz",
     },
     {
       label: "Params",
-      icon: FaDice,
+      icon: FaCogs,
       path: "/parameters",
     },
     {
@@ -34,6 +34,7 @@ export const BottomNavigation = () => {
       borderTop="1px solid #E2E8F0"
       boxShadow="0px -1px 5px rgba(0, 0, 0, 0.1)"
       zIndex="10"
+      className="navigation"
     >
       <Flex justify="space-around" align="center" py={3}>
         {menuItems.map((item) => {

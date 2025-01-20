@@ -32,6 +32,7 @@ interface QuestionsProps {
 export const Questions = ({
   questions,
   setUserAnswers,
+  currentIndex,
   setCurrentIndex,
   category,
   progress,
@@ -41,7 +42,7 @@ export const Questions = ({
   const [showAnswer, setShowAnswer] = useState<boolean>(false)
   const [currentAnswer, setCurrentAnswer] = useState<string>("")
 
-  const currentIndex = useMemo(() => progress?.answeredCount ?? 0, [progress])
+  //const currentIndex = useMemo(() => progress?.answeredCount ?? 0, [progress])
   const currentQuestion = questions?.[currentIndex]
 
   const multiplesQuestions = useMemo<string[]>(
@@ -109,6 +110,7 @@ export const Questions = ({
       textAlign="center"
       p={10}
       pb="40px"
+      w={"full"}
     >
       {questions?.length === 0 && (
         <Button onClick={() => navigate("")}>Reload </Button>

@@ -7,11 +7,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const { user, loading } = useAuth()
 
-  if (loading) {
-    return <p>Chargement...</p> // Montre un indicateur de chargement pendant la vérification
-  }
-
-  if (!user) {
+  if (!user && !loading) {
     return <Navigate to="/login" replace /> // Redirige vers /login si aucun utilisateur n'est connecté
   }
 

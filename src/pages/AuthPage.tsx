@@ -44,7 +44,7 @@ export const AuthPage = () => {
       try {
         await loginUser(formData)
         setSuccess("Connexion réussie !")
-        navigate("/") // Redirection vers la home page
+        navigate("/quiz") // Redirection vers la home page
       } catch (err) {
         setError(
           (err instanceof Error && err.message) || "Une erreur est survenue."
