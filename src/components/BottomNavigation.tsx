@@ -1,5 +1,5 @@
 import { Box, Flex, Text } from "@chakra-ui/react"
-import { FaDice, FaMedal, FaCogs } from "react-icons/fa"
+import { FaDice, FaUserAstronaut, FaCogs } from "react-icons/fa"
 import { useNavigate, useLocation } from "react-router-dom"
 
 export const BottomNavigation = () => {
@@ -19,7 +19,7 @@ export const BottomNavigation = () => {
     },
     {
       label: "Account",
-      icon: FaMedal,
+      icon: FaUserAstronaut,
       path: "/account",
     },
   ]

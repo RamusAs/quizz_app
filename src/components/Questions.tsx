@@ -8,7 +8,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 
-import { decodeHtml, Progress, Question, userAnswers } from "../helpers"
+import { decodeHtml, Progress, Question } from "../helpers"
 import { useMemo, useState } from "react"
 import {
   ProgressBar,
@@ -23,7 +23,6 @@ import { updateUserProgress } from "../services/firestoreService"
 interface QuestionsProps {
   questions: Question[] | undefined
   currentIndex: number
-  setUserAnswers: Function
   setCurrentIndex: Function
   category: string | undefined
   progress: Progress | undefined
@@ -31,7 +30,6 @@ interface QuestionsProps {
 
 export const Questions = ({
   questions,
-  setUserAnswers,
   currentIndex,
   setCurrentIndex,
   category,
@@ -42,7 +40,6 @@ export const Questions = ({
   const [showAnswer, setShowAnswer] = useState<boolean>(false)
   const [currentAnswer, setCurrentAnswer] = useState<string>("")
 
-  //const currentIndex = useMemo(() => progress?.answeredCount ?? 0, [progress])
   const currentQuestion = questions?.[currentIndex]
 
   const multiplesQuestions = useMemo<string[]>(
@@ -56,15 +53,7 @@ export const Questions = ({
   const handleAnswer = (answer: string) => {
     if (!currentQuestion) return
     setCurrentAnswer(answer)
-    const isCorrect = answer === currentQuestion.correct_answer
-    setUserAnswers((prev: userAnswers[]) => [
-      ...prev,
-      {
-        question: currentQuestion.question,
-        answer,
-        correct: isCorrect,
-      },
-    ])
+
     setShowAnswer(true)
   }
 
@@ -74,9 +63,7 @@ export const Questions = ({
     const isCorrect = currentAnswer === currentQuestion.correct_answer
     setCurrentAnswer("")
     setShowAnswer(false)
-    if (currentIndex < questions!.length) {
-      setCurrentIndex((prev: number) => prev + 1)
-    }
+    setCurrentIndex((prev: number) => prev + 1)
     updateUserProgress(category ?? "", {
       remainingQuestions: [
         ...(progress?.remainingQuestions ?? []),

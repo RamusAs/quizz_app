@@ -38,3 +38,10 @@ export interface UserData {
   email: string
   password: string
 }
+
+export interface Settings {
+  difficulty: "any" | "easy" | "medium" | "hard"
+  type: "any" | "multiple" | "boolean"
+  setDifficulty: (value: string) => void
+  setType: (value: string) => void
+}

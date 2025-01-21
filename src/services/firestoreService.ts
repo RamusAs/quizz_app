@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore"
 import { db } from "../firebase"
 
-import { Category, Progress, UserData } from "../helpers"
+import { Category, Progress, Settings, UserData } from "../helpers"
 import { getAuth } from "firebase/auth"
 
 export async function createUser(userData: UserData) {
@@ -27,15 +27,18 @@ export async function createUser(userData: UserData) {
     const categoriesSnapshot = await getDocs(categoriesCollection)
 
     // Construire l'objet de progrès pour chaque catégorie
-    const progress = categoriesSnapshot.docs.reduce<Record<string, Progress>>((acc, category) => {
-      acc[category.id] = {
-        answeredCount: 0,
-        correctCount: 0,
-        lastAnswered: null,
-        remainingQuestions: [], // Préremplir ou laisser vide selon les besoins
-      }
-      return acc
-    }, {})
+    const progress = categoriesSnapshot.docs.reduce<Record<string, Progress>>(
+      (acc, category) => {
+        acc[category.id] = {
+          answeredCount: 0,
+          correctCount: 0,
+          lastAnswered: null,
+          remainingQuestions: [], // Préremplir ou laisser vide selon les besoins
+        }
+        return acc
+      },
+      {}
+    )
 
     // Vérifie si l'utilisateur existe déjà
     const userRef = doc(db, "users", userId)
@@ -118,12 +121,18 @@ export async function getQuestions() {
   }
 }
 
-export async function getCategoryQuestions(categoryId: number) {
+export async function getCategoryQuestions(
+  categoryId: number,
+  settings: Settings
+) {
+  console.log(settings.type)
+
   try {
     // Crée une requête pour filtrer par `category_id`
     const questionsQuery = query(
       collection(db, "questions"),
-      where("category_id", "==", categoryId)
+      where("category_id", "==", categoryId),
+      //where("type", "==", settings.type)
     )
 
     // Exécute la requête
