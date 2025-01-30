@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { FormControl, FormLabel } from "@chakra-ui/form-control"
-import { Box, Flex, Input, Stack, Heading, Text } from "@chakra-ui/react"
+import { Box, Input, Stack, Heading, Text } from "@chakra-ui/react"
 import { Alert } from "../components/ui/alert"
 import { loginUser, registerUser } from "../services/authServices"
 import { useNavigate } from "react-router-dom"

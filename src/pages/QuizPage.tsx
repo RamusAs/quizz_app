@@ -55,7 +55,6 @@ export const QuizPage: React.FC = () => {
       ),
   })
 
-
   const isLoading = questionLoading || catLoading || progressLoading
 
   if (isLoading) return <PageLoader />
@@ -68,7 +67,7 @@ export const QuizPage: React.FC = () => {
       {!isGameEnd && (
         <Questions
           questions={questions as Question[]}
-          currentIndex={currentIndex}
+          currentIndex={currentIndex ?? progressIndex}
           setCurrentIndex={setCurrentIndex}
           category={category.uid}
           progress={progress?.[category.uid]}
