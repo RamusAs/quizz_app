@@ -2,14 +2,7 @@
 
 import { useState } from "react"
 import { FormControl, FormLabel } from "@chakra-ui/form-control"
-import {
-  Box,
-  Flex,
-  Input,
-  Stack,
-  Heading,
-  Text,
-} from "@chakra-ui/react"
+import { Box, Flex, Input, Stack, Heading, Text } from "@chakra-ui/react"
 import { Alert } from "../components/ui/alert"
 import { loginUser, registerUser } from "../services/authServices"
 import { useNavigate } from "react-router-dom"
@@ -70,78 +63,93 @@ export const AuthPage = () => {
   }
 
   return (
-    <Flex align="center" justify="center" minH="100vh" bg="gray.50">
-      <Stack mx="auto" maxW="lg" py={12} px={6}>
-        <Stack align="center">
-          <Heading fontSize="4xl">
-            {isLogin ? "Login" : "Sign up"} to your account
-          </Heading>
-          <Text fontSize="lg" color="gray.600">
-            Welcome to our quiz platform! 🎉
-          </Text>
-        </Stack>
-        <Box
-          p={8}
-          m={4}
-          maxW="lg"
-          w="full"
-          bg="white"
-          boxShadow="lg"
-          rounded="lg"
-        >
-          {error && <Alert status="error" title={error} />}
-          {success && <Alert status="success" title={success} />}
-          {!isLogin && (
+    <Box
+      bgGradient="to-t"
+      gradientFrom="#2B2357"
+      gradientTo="#7F5CB2"
+      minHeight="100vh"
+      color="white"
+    >
+      <Box
+        bgSize="contain"
+        bgRepeat="no-repeat"
+        bgImage="url(assets/home_bg.png)"
+        minHeight="100vh"
+        py={10}
+        px={6}
+      >
+        <Stack mx="auto" maxW="lg" py={12} px={6}>
+          <Box
+            p={8}
+            m={4}
+            maxW="lg"
+            w="full"
+            bg="white"
+            boxShadow="lg"
+            rounded="lg"
+          >
+            <Stack align="center" textAlign="center">
+              <Heading color="black" fontSize="4xl" mb={2}>
+                {isLogin ? "Login" : "Sign up"}
+              </Heading>
+              <Text fontSize="lg" color="gray.600">
+                Welcome to our quiz platform! 🎉
+              </Text>
+            </Stack>
+            {error && <Alert status="error" title={error} />}
+            {success && <Alert status="success" title={success} />}
+            {!isLogin && (
+              <FormControl isRequired>
+                <FormLabel>Name</FormLabel>
+                <Input
+                  id="name"
+                  type="text"
+                  value={formData.name}
+                  onChange={handleChange}
+                />
+              </FormControl>
+            )}
             <FormControl isRequired>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Email address</FormLabel>
               <Input
-                id="name"
-                type="text"
-                value={formData.name}
+                id="email"
+                type="email"
+                value={formData.email}
                 onChange={handleChange}
               />
             </FormControl>
-          )}
-          <FormControl isRequired>
-            <FormLabel>Email address</FormLabel>
-            <Input
-              id="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel>Password</FormLabel>
-            <Input
-              id="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-          </FormControl>
-          <Stack p={10}>
-            <Button
-              bg="#6B46C1"
-              color="white"
-              _hover={{ bg: "blue.500" }}
-              onClick={handleSubmit}
-              loading={isLoading}
-            >
-              {isLogin ? "Login" : "Sign up"}
-            </Button>
+            <FormControl isRequired>
+              <FormLabel>Password</FormLabel>
+              <Input
+                id="password"
+                type="password"
+                value={formData.password}
+                onChange={handleChange}
+              />
+            </FormControl>
+            <Stack p={10}>
+              <Button
+                bg="#6B46C1"
+                color="white"
+                _hover={{ bg: "blue.500" }}
+                onClick={handleSubmit}
+                loading={isLoading}
+              >
+                {isLogin ? "Login" : "Sign up"}
+              </Button>
 
-            <Button
-              variant="outline"
-              onClick={() => setIsLogin((prev) => !prev)}
-            >
-              {isLogin
-                ? "Don't have an account? Sign up"
-                : "Already have an account? Login"}
-            </Button>
-          </Stack>
-        </Box>
-      </Stack>
-    </Flex>
+              <Button
+                variant="outline"
+                onClick={() => setIsLogin((prev) => !prev)}
+              >
+                {isLogin
+                  ? "Don't have an account? Sign up"
+                  : "Already have an account? Login"}
+              </Button>
+            </Stack>
+          </Box>
+        </Stack>
+      </Box>
+    </Box>
   )
 }

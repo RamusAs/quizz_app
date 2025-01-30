@@ -1,7 +1,7 @@
-import React, { useState } from "react"
+import React, { useMemo, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { Text } from "@chakra-ui/react"
-import { Question, Settings, UserProgress } from "../helpers"
+import { Question, UserProgress } from "../helpers"
 import { Questions } from "../components"
 import { Navigate, useParams } from "react-router-dom"
 import {
@@ -9,7 +9,7 @@ import {
   getCategoryQuestions,
   getUserProgress,
 } from "../services/firestoreService"
-import { useSettings } from "./ParametersPage"
+//import { useSettings } from "./ParametersPage"
 import { PageLoader } from "../PageLoader"
 
 export const QuizPage: React.FC = () => {
@@ -18,7 +18,7 @@ export const QuizPage: React.FC = () => {
     queryKey: ["category"],
     queryFn: () => getCategory(parseInt(id ?? "")),
   })
-  const { type, difficulty } = useSettings() as Settings
+  // const { type, difficulty } = useSettings() as Settings
 
   const { data: progress, isLoading: progressLoading } = useQuery<UserProgress>(
     {
@@ -26,15 +26,23 @@ export const QuizPage: React.FC = () => {
       queryFn: () => getUserProgress(),
     }
   )
-  const progressIndex = progress?.[category.uid]?.answeredCount ?? 0
 
+  const [currentIndex, setCurrentIndex] = useState<number>(0)
+  const progressIndex = useMemo(() => {
+    const index = progress?.[category.uid]?.answeredCount ?? 0
+    setCurrentIndex(index)
+    return index
+  }, [progress, category])
 
   const { data: questions, isLoading: questionLoading, error } = useQuery<
     Question[] | any
   >({
     queryKey: ["questions"],
     queryFn: () =>
-      getCategoryQuestions(parseInt(id ?? ""), {
+      getCategoryQuestions(
+        parseInt(
+          id ?? ""
+        ) /* {
         type,
         difficulty,
         setDifficulty: (value: string): void => {
@@ -43,12 +51,10 @@ export const QuizPage: React.FC = () => {
         setType: (value: string): void => {
           throw new Error(`"Function not implemented." ${value}`)
         },
-      }),
+      } */
+      ),
   })
 
-  const [currentIndex, setCurrentIndex] = useState<number>(
-    progressIndex as number
-  )
 
   const isLoading = questionLoading || catLoading || progressLoading
 
@@ -62,7 +68,7 @@ export const QuizPage: React.FC = () => {
       {!isGameEnd && (
         <Questions
           questions={questions as Question[]}
-          currentIndex={progressIndex ?? 0}
+          currentIndex={currentIndex}
           setCurrentIndex={setCurrentIndex}
           category={category.uid}
           progress={progress?.[category.uid]}

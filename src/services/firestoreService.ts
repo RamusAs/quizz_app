@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore"
 import { db } from "../firebase"
 
-import { Category, Progress, Settings, UserData } from "../helpers"
+import { Category, Progress, UserData } from "../helpers"
 import { getAuth } from "firebase/auth"
 
 export async function createUser(userData: UserData) {
@@ -122,17 +122,15 @@ export async function getQuestions() {
 }
 
 export async function getCategoryQuestions(
-  categoryId: number,
-  settings: Settings
+  categoryId: number
+  // settings: Settings
 ) {
-  console.log(settings.type)
-
   try {
     // Crée une requête pour filtrer par `category_id`
     const questionsQuery = query(
       collection(db, "questions"),
-      where("category_id", "==", categoryId),
-      //where("type", "==", settings.type)
+      where("category_id", "==", categoryId)
+      // where("type", "==", settings.type)
     )
 
     // Exécute la requête
@@ -223,8 +221,6 @@ export async function updateUserProgress(
       return
     }
 
-    console.log("User ID récupéré :", userId)
-
     // Vérifier l'existence du document utilisateur
     const userRef = doc(db, "users", userId)
     const userDoc = await getDoc(userRef)
@@ -239,10 +235,7 @@ export async function updateUserProgress(
     const progress = userData.progress || {}
 
     // Vérifier si la catégorie existe dans les progrès
-    if (!progress[categoryId]) {
-      console.error("Catégorie non trouvée dans les progrès de l'utilisateur !")
-      return
-    }
+    if (!progress[categoryId]) return
 
     // Mettre à jour les progrès pour la catégorie spécifiée
     progress[categoryId] = {
