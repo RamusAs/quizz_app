@@ -87,6 +87,7 @@ export const AuthPage = () => {
             bg="white"
             boxShadow="lg"
             rounded="lg"
+            color="black"
           >
             <Stack align="center" textAlign="center">
               <Heading color="black" fontSize="4xl" mb={2}>
